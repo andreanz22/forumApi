@@ -47,7 +47,7 @@ class ThreadCommetRepositoryPostgres extends ThreadCommentRepository {
         if (!result.rowCount) {
             return null;
         }
-        // const mappedResult = result.rows.map((data) => new Comment(data));
+
         const mappedResult = await result.rows.map(async (data) => {
             const replies = await this.getReplies(data.id);
             if (replies) {

@@ -32,11 +32,6 @@ class ThreadCommentUseCase {
         await this._threadCommentRepository.deleteComment(comment.id);
     }
 
-    async getCommentsByThread(useCasePayload) {
-        const comments = await this._threadCommentRepository.getComments(useCasePayload.threadId);
-        return comments;
-    }
-
     async deleteCommentReplies(useCasePayload) {
         const deleteThreadCommentReply = new DeleteThreadCommentReply(useCasePayload);
         await this._threadRepository.verifyAvailableThread(deleteThreadCommentReply.threadId);

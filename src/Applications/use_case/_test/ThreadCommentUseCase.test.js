@@ -256,38 +256,6 @@ describe('CommentUseCase', () => {
         });
     });
 
-    describe('getCommentsByThread action', () => {
-        it('should return comments data if comment exist', async () => {
-            // arrange
-            const useCasePayload = {
-                threadId: 'thread-123',
-            };
-
-            const exectedComments = [
-                {
-                    id: 'comment-_pby2_tmXV6bcvcdev8xk',
-                    username: 'johndoe',
-                    date: '2021-08-08T07:22:33.555Z',
-                    content: 'sebuah comment',
-                },
-            ];
-
-            const mockThreadRepository = new ThreadRepository();
-            const mockThreadCommentRepository = new ThreadCommentRepository();
-
-            mockThreadCommentRepository.getComments = jest.fn()
-                .mockImplementation(() => Promise.resolve(exectedComments));
-
-            const getCommentUseCase = new ThreadCommentUseCase({
-                threadCommentRepository: mockThreadCommentRepository,
-                threadRepository: mockThreadRepository,
-            });
-
-            const responseComment = await getCommentUseCase.getCommentsByThread({ threadId: useCasePayload.threadId });
-            expect(responseComment).toStrictEqual(exectedComments);
-        });
-    });
-
     describe('deleteCommetReplies action', () => {
         it('should throw error if thread not found', async () => {
             // arrange

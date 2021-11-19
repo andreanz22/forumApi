@@ -62,9 +62,6 @@ class ThreadHandler {
 
         const { threadId } = request.params;
         const thread = await threadUseCase.getDetailThread({ threadId });
-        const comments = await threadCommentUseCase.getCommentsByThread({ threadId });
-
-        thread.comments = comments;
         const response = h.response({
             status: 'success',
             data: {
