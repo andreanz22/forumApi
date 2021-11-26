@@ -30,6 +30,8 @@ describe('CommentUseCase', () => {
             mockThreadRepository.verifyAvailableThread = jest.fn()
                 .mockImplementation(() => Promise.resolve());
 
+            mockThreadCommentRepository.verifyAvailableComment = jest.fn(() => Promise.resolve());
+
             mockThreadCommentRepository.addComment = jest.fn()
                 .mockImplementation(() => Promise.resolve(expectedAddedComment));
 
@@ -74,7 +76,7 @@ describe('CommentUseCase', () => {
             mockThreadRepository.verifyAvailableThread = jest.fn()
                 .mockImplementation(() => Promise.resolve());
 
-            mockThreadCommentRepository.getComment = jest.fn()
+            mockThreadCommentRepository.verifyAvailableComment = jest.fn()
                 .mockImplementation(() => {
                     throw new NotFoundError('tidak ada');
                 });
@@ -111,7 +113,7 @@ describe('CommentUseCase', () => {
             mockThreadRepository.verifyAvailableThread = jest.fn()
                 .mockImplementation(() => Promise.resolve());
 
-            mockThreadCommentRepository.getComment = jest.fn()
+            mockThreadCommentRepository.verifyAvailableComment = jest.fn()
                 .mockImplementation(() => Promise.resolve());
 
             mockThreadCommentRepository.addComment = jest.fn()

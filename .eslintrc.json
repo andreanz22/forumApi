@@ -19,6 +19,7 @@
     "no-console": "off",
     "indent": ["error", 4, { "MemberExpression": 1, "SwitchCase": 1}],
     "max-len": [0, { "ignoreComments": true }],
-    "camelcase": ["error", {"ignoreDestructuring": true, "properties": "never"}]
+    "camelcase": ["error", {"ignoreDestructuring": true, "properties": "never"}],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
   }
 }

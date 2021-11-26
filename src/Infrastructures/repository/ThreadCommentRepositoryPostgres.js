@@ -4,7 +4,7 @@ const ThreadCommentRepository = require('../../Domains/threads/comments/ThreadCo
 const NotFoundError = require('../../Commons/exceptions/NotFoundError');
 const { mapCommentModel, mapCommentRepliesModel } = require('../../Commons/Utils/MapsArray');
 
-class ThreadCommetRepositoryPostgres extends ThreadCommentRepository {
+class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
     constructor(pool, idGenerator) {
         super();
         this._pool = pool;
@@ -35,6 +35,19 @@ class ThreadCommetRepositoryPostgres extends ThreadCommentRepository {
         await this._pool.query(query);
     }
 
+    async verifyAvailableComment({ commentId, threadId }) {
+        const query = {
+            text: 'SELECT id, thread_id, owner FROM thread_comments WHERE id = $1 and thread_id = $2 and is_deleted = false',
+            values: [commentId, threadId],
+        };
+
+        const result = await this._pool.query(query);
+
+        if (!result.rowCount) {
+            throw new NotFoundError('comment tidak ditemukan atau sudah dihapus');
+        }
+    }
+
     async getComments(threadId) {
         const query = {
             text: `SELECT thread_comments.*, users.username FROM thread_comments 
@@ -48,14 +61,16 @@ class ThreadCommetRepositoryPostgres extends ThreadCommentRepository {
             return null;
         }
 
-        const mappedResult = await result.rows.map(async (data) => {
-            const replies = await this.getReplies(data.id);
-            if (replies) {
-                return { ...mapCommentModel(data), replies };
-            }
-            return { ...mapCommentModel(data) };
-        });
-        return Promise.all(mappedResult);
+        const mappedResult = await result.rows.map(mapCommentModel);
+        return mappedResult;
+        // const mappedResult = await result.rows.map(async (data) => {
+        //     const replies = await this.getReplies(data.id);
+        //     if (replies) {
+        //         return { ...mapCommentModel(data), replies };
+        //     }
+        //     return { ...mapCommentModel(data) };
+        // });
+        // return Promise.all(mappedResult);
     }
 
     async getComment({ commentId, threadId, replyId = null }) {
@@ -81,12 +96,12 @@ class ThreadCommetRepositoryPostgres extends ThreadCommentRepository {
         return result.rows[0];
     }
 
-    async getReplies(parentId) {
+    async getReplies(parentIds) {
         const query = {
             text: `SELECT thread_comments.*, users.username FROM thread_comments 
                     inner join users on users.id = thread_comments.owner
-                    WHERE parent_id = $1 order by thread_comments.created_at asc`,
-            values: [parentId],
+                    WHERE parent_id = ANY($1::text[]) order by thread_comments.created_at asc`,
+            values: [parentIds],
         };
 
         const result = await this._pool.query(query);
@@ -94,9 +109,24 @@ class ThreadCommetRepositoryPostgres extends ThreadCommentRepository {
             return null;
         }
 
-        const mappedResult = result.rows.map(mapCommentRepliesModel);
-        return mappedResult;
+        return result.rows;
     }
+
+    // async getReplies(parentId) {
+    //     const query = {
+    //         text: `SELECT thread_comments.*, users.username FROM thread_comments
+    //                 inner join users on users.id = thread_comments.owner
+    //                 WHERE parent_id = $1 order by thread_comments.created_at asc`,
+    //         values: [parentId],
+    //     };
+
+    //     const result = await this._pool.query(query);
+    //     if (!result.rowCount) {
+    //         return null;
+    //     }
+
+    //     return result.rows.map(mapCommentRepliesModel);
+    // }
 }
 
-module.exports = ThreadCommetRepositoryPostgres;
+module.exports = ThreadCommentRepositoryPostgres;

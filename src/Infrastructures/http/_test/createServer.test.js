@@ -57,4 +57,33 @@ describe('HTTP server', () => {
         // Assert
         expect(response.statusCode).toEqual(401);
     });
+
+    it('should response 404 but auth true', async () => {
+        // Arrange
+        const server = await createServer(container);
+
+        const payloadDeleteComment = {
+            commentId: 'comment-123',
+            threadId: 'thread-46',
+        };
+
+        const response = await server.inject({
+            method: 'DELETE',
+            url: `/threads/${payloadDeleteComment.threadId}/comments/${payloadDeleteComment.commentId}`,
+            headers: { Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRpY29kaW5nIiwiaWQiOiJ1c2VyLTEyMyIsImlhdCI6MTYzNjk5NzYxOH0.ode7i4U3sHBDwPw3UnW0qghAtsBgULJr9IT-6FPkyVE' },
+            // auth: {
+            //     strategy: 'forumapi_jwt',
+            //     credentials: {
+            //         userId: 'user-123',
+            //     },
+            //     artifacts: {
+            //         dasdas: null,
+            //     },
+            // },
+        });
+
+        // Assert
+        // console.log(response);
+        expect(response.statusCode).toEqual(404);
+    });
 });

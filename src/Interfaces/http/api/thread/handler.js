@@ -58,7 +58,6 @@ class ThreadHandler {
 
     async getDetailThread(request, h) {
         const threadUseCase = this._container.getInstance(ThreadUseCase.name);
-        const threadCommentUseCase = this._container.getInstance(ThreadCommentUseCase.name);
 
         const { threadId } = request.params;
         const thread = await threadUseCase.getDetailThread({ threadId });

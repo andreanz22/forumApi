@@ -29,7 +29,7 @@ const ThreadRepositoryPostgres = require('./repository/ThreadRepositoryPostgres'
 const ThreadUseCase = require('../Applications/use_case/ThreadUseCase');
 
 const ThreadCommentRepository = require('../Domains/threads/comments/ThreadCommentRepository');
-const ThreadCommentRepositoryPostgres = require('./repository/ThreadCommetRepositoryPostgres');
+const ThreadCommentRepositoryPostgres = require('./repository/ThreadCommentRepositoryPostgres');
 const ThreadCommentUseCase = require('../Applications/use_case/ThreadCommentUseCase');
 
 const container = createContainer();
