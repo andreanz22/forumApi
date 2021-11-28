@@ -1,7 +1,7 @@
 const pool = require('../../database/postgres/pool');
 const ThreadTableTestHelper = require('../../../../tests/ThreadTableTestHelper');
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
-const AuthenticationsTableTestHelper = require('../../../../tests/AuthenticationsTableTestHelper');
+const LikeTableTestHelper = require('../../../../tests/LikeTableTestHelper');
 const ThreadCommentTableTestHelper = require('../../../../tests/ThreadCommentTableTestHelper');
 const container = require('../../container');
 const createServer = require('../createServer');
@@ -563,6 +563,97 @@ describe('/threads endpoint', () => {
             const responseJson = JSON.parse(reponseDeleteThreadComment.payload);
             expect(reponseDeleteThreadComment.statusCode).toEqual(200);
             expect(responseJson.status).toEqual('success');
+        });
+    });
+
+    describe('when PUT /threads/{threadId}/comments/{commentId}/likes', () => {
+        beforeAll(async () => {
+            await ThreadTableTestHelper.addThread({ owner: 'user-123' });
+            await ThreadCommentTableTestHelper.addComment({ content: 'hiyaa' });
+        });
+
+        afterAll(async () => {
+            await ThreadTableTestHelper.cleanTable();
+            await ThreadCommentTableTestHelper.cleanTable();
+            await LikeTableTestHelper.cleanTable();
+        });
+
+        it('should response 404 when thread not found', async () => {
+            const server = await createServer(container);
+            const payloadDeleteComment = {
+                commentId: 'comment-123',
+                threadId: 'thread-46',
+            };
+            const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRpY29kaW5nIiwiaWQiOiJ1c2VyLTEyMyIsImlhdCI6MTYzNjk5NzYxOH0.ode7i4U3sHBDwPw3UnW0qghAtsBgULJr9IT-6FPkyVE';
+
+            const reponseDeleteThreadComment = await server.inject({
+                method: 'PUT',
+                url: `/threads/${payloadDeleteComment.threadId}/comments/${payloadDeleteComment.commentId}/likes`,
+                headers: { Authorization: `Bearer ${token}` },
+                auth: {
+                    strategy: 'forumapi_jwt',
+                    credentials: {
+                        userId: 'user-123',
+                    },
+                },
+            });
+
+            // Assert
+            expect(reponseDeleteThreadComment.statusCode).toEqual(404);
+        });
+
+        it('should response 404 when comment not found', async () => {
+            const server = await createServer(container);
+            const payloadDeleteComment = {
+                commentId: 'comment-46',
+                threadId: 'thread-123',
+            };
+            const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRpY29kaW5nIiwiaWQiOiJ1c2VyLTEyMyIsImlhdCI6MTYzNjk5NzYxOH0.ode7i4U3sHBDwPw3UnW0qghAtsBgULJr9IT-6FPkyVE';
+
+            const reponseDeleteThreadComment = await server.inject({
+                method: 'PUT',
+                url: `/threads/${payloadDeleteComment.threadId}/comments/${payloadDeleteComment.commentId}/likes`,
+                headers: { Authorization: `Bearer ${token}` },
+                auth: {
+                    strategy: 'forumapi_jwt',
+                    credentials: {
+                        userId: 'user-123',
+                    },
+                },
+            });
+
+            // Assert
+            expect(reponseDeleteThreadComment.statusCode).toEqual(404);
+        });
+
+        it('should unlike coment', async () => {
+            const dateTest = new Date('2021-11-17T08:58:02.684Z').toISOString();
+            await LikeTableTestHelper.addLike({ insertedAt: dateTest });
+
+            const server = await createServer(container);
+            const payloadDeleteComment = {
+                commentId: 'comment-123',
+                threadId: 'thread-123',
+            };
+            const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRpY29kaW5nIiwiaWQiOiJ1c2VyLTEyMyIsImlhdCI6MTYzNjk5NzYxOH0.ode7i4U3sHBDwPw3UnW0qghAtsBgULJr9IT-6FPkyVE';
+
+            const reponseDeleteThreadComment = await server.inject({
+                method: 'PUT',
+                url: `/threads/${payloadDeleteComment.threadId}/comments/${payloadDeleteComment.commentId}/likes`,
+                headers: { Authorization: `Bearer ${token}` },
+                auth: {
+                    strategy: 'forumapi_jwt',
+                    credentials: {
+                        userId: 'user-123',
+                    },
+                },
+            });
+
+            // Assert
+            expect(reponseDeleteThreadComment.statusCode).toEqual(200);
+
+            const tokens = await LikeTableTestHelper.findLike('like-123');
+            expect(tokens).toHaveLength(0);
         });
     });
 });

@@ -112,6 +112,14 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
         return result.rows;
     }
 
+    //     select
+    //     thread_comments.*, count(likes.*) as likeCount
+    // from thread_comments
+    // inner join users on users.id = thread_comments.owner
+    // inner join likes on likes.comment_id = thread_comments.id
+    // where thread_comments.id = 'comment--EMSPf2e64ChUTPXVM4wo'
+    // group by thread_comments.id;
+
     // async getReplies(parentId) {
     //     const query = {
     //         text: `SELECT thread_comments.*, users.username FROM thread_comments

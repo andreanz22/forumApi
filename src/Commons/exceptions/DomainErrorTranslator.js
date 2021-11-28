@@ -40,6 +40,12 @@ DomainErrorTranslator._directories = {
     'DELETE_THREAD_COMMENT_REPLIES.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat menghapus comment karena param yang dibutuhkan tidak ada'),
     'DELETE_THREAD_COMMENT_REPLIES.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('tidak dapat menghapus comment karena data type tidak benar'),
     'DELETE_COMMENT_REPLIES_USE_CASE.NOT_OWNER_OF_COMMENT': new AuthorizationError('anda bukan pemilik comment'),
+
+    'LIKE.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('data like yang dibutuhkan tidak ada'),
+    'LIKE.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('like data type tidak benar'),
+
+    'ADD_LIKE.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('data like yang dibutuhkan tidak ada'),
+    'ADD_LIKE.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('like data type tidak benar'),
 };
 
 module.exports = DomainErrorTranslator;
