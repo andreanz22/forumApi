@@ -11,6 +11,7 @@ describe('MapArray', () => {
                 content: 'hiyaa',
                 created_at: new Date('2021-11-17T08:58:02.684Z'),
                 is_deleted: false,
+                like_count: '0',
             });
 
             const expectedResult = {
@@ -18,6 +19,7 @@ describe('MapArray', () => {
                 username: 'Renova',
                 content: 'hiyaa',
                 date: dateTest,
+                likeCount: 0,
             };
 
             expect(arrayData).toStrictEqual(expectedResult);
@@ -32,6 +34,7 @@ describe('MapArray', () => {
                 content: 'hiyaa',
                 created_at: new Date('2021-11-17T08:58:02.684Z'),
                 is_deleted: true,
+                like_count: '0',
             });
 
             const expectedResult = {
@@ -39,6 +42,7 @@ describe('MapArray', () => {
                 username: 'Renova',
                 content: '**komentar telah dihapus**',
                 date: dateTest,
+                likeCount: 0,
             };
 
             expect(arrayData).toStrictEqual(expectedResult);

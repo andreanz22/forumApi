@@ -50,9 +50,12 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
 
     async getComments(threadId) {
         const query = {
-            text: `SELECT thread_comments.*, users.username FROM thread_comments 
+            text: `SELECT thread_comments.*, users.username, count(likes.*) as like_count FROM thread_comments 
                     inner join users on users.id = thread_comments.owner
-                    WHERE thread_id = $1 and parent_id is NULL order by thread_comments.created_at asc`,
+                    left join likes on likes.comment_id = thread_comments.id
+                    WHERE thread_id = $1 and parent_id is NULL 
+                    group by thread_comments.id, users.username
+                    order by thread_comments.created_at asc`,
             values: [threadId],
         };
 
@@ -61,7 +64,7 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
             return null;
         }
 
-        const mappedResult = await result.rows.map(mapCommentModel);
+        const mappedResult = result.rows.map(mapCommentModel);
         return mappedResult;
         // const mappedResult = await result.rows.map(async (data) => {
         //     const replies = await this.getReplies(data.id);

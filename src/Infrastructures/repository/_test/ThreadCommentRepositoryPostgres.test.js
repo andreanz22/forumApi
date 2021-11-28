@@ -150,12 +150,14 @@ describe('CommentRepositoryPostgres', () => {
                     username: 'Renova',
                     content: 'hiyaa',
                     date: dateTest,
+                    likeCount: 0,
                 },
                 {
                     id: 'comment-1234',
                     username: 'Renova',
                     content: 'hiyaa',
                     date: dateTest,
+                    likeCount: 0,
                 },
             ]);
         });
