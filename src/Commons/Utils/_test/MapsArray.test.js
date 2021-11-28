@@ -19,7 +19,7 @@ describe('MapArray', () => {
                 username: 'Renova',
                 content: 'hiyaa',
                 date: dateTest,
-                // likeCount: 0,
+                likeCount: 0,
             };
 
             expect(arrayData).toStrictEqual(expectedResult);
