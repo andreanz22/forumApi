@@ -135,8 +135,9 @@ describe('CommentRepositoryPostgres', () => {
 
         it('should return comments data', async () => {
             const dateTest = new Date('2021-11-17T08:58:02.684Z').toISOString();
+            const dateTest2 = new Date('2021-11-17T09:01:02.684Z').toISOString();
             await ThreadCommentTableTestHelper.addComment({ id: 'comment-123', content: 'hiyaa', insertedAt: dateTest });
-            await ThreadCommentTableTestHelper.addComment({ id: 'comment-1234', content: 'hiyaa', insertedAt: dateTest });
+            await ThreadCommentTableTestHelper.addComment({ id: 'comment-1234', content: 'hiyaa', insertedAt: dateTest2 });
             const fakeIdGenerator = () => '123'; // stub!
             const threadCommentRepositoryPostgres = new ThreadCommentRepositoryPostgres(pool, fakeIdGenerator);
 
@@ -156,7 +157,7 @@ describe('CommentRepositoryPostgres', () => {
                     id: 'comment-1234',
                     username: 'Renova',
                     content: 'hiyaa',
-                    date: dateTest,
+                    date: dateTest2,
                     likeCount: 0,
                 },
             ]);
