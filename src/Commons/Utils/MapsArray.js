@@ -3,7 +3,7 @@ const mapCommentModel = (data) => ({
     content: (data.is_deleted ? '**komentar telah dihapus**' : data.content),
     date: data.created_at.toISOString(),
     username: data.username,
-    likeCount: Number(data.like_count),
+    likeCount: Number(data.like_count), // convert to number
 });
 
 const mapCommentRepliesModel = (data) => ({
